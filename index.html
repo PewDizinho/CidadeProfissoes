@@ -294,6 +294,17 @@
 
     <script>
         // Formatação de CPF
+      console.log(`
+╔════════════════════════════════════════════════════╗
+║            Desenvolvido por Pew's Cavern          ║
+╠════════════════════════════════════════════════════╣
+║  🌐 Site:       https://pewdizinho.com            ║
+║  🛠️ Projetos:   Bots, Sistemas Web, Apps Mobile   ║
+║  🧠 Contato:    pewscavernsuporte@gmail.com       ║
+║  💬 Discord:    @PewDizinho                       ║
+╚════════════════════════════════════════════════════╝
+`);
+
         document.getElementById('cpf').addEventListener('input', function (e) {
             let value = e.target.value.replace(/\D/g, '');
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
@@ -385,7 +396,6 @@
                     }
                 });
                 const responseText = await response.text();
-                console.log(responseText);
                 if (response.ok) {
                     showMessage(responseText || 'Cadastro realizado com sucesso!', 'success');
                     document.getElementById('cadastroForm').reset();
