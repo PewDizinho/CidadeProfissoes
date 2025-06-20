@@ -283,7 +283,7 @@
 
             <div class="form-group">
                 <label for="telefone">Telefone</label>
-                <input type="tel" id="telefone" name="telefone" required autocomplete="tel"
+                <input type="tel" id="telefone" name="telefone" required autocomplete="tel" maxlength="15"
                     placeholder="(00) 00000-0000">
             </div>
 
@@ -348,6 +348,17 @@
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
         }
+        function validarTelefone(telefone) {
+            // Remove tudo que não for dígito
+            const numeros = telefone.replace(/\D/g, '');
+            // Deve ter 10 ou 11 dígitos (com DDD)
+            if (!(numeros.length === 10 || numeros.length === 11)) return false;
+            // DDD não pode começar com 0 ou 1
+            if (/^(0|1)/.test(numeros.substr(0, 2))) return false;
+            // Se for celular (11 dígitos), o nono dígito deve ser 9
+            if (numeros.length === 11 && numeros[2] !== '9') return false;
+            return true;
+        }
         // Submissão do formulário
         document.getElementById('cadastroForm').addEventListener('submit', async function (e) {
             document.getElementById('message').style.display = 'none';
@@ -374,12 +385,13 @@
                 showMessage('CPF inválido. Verifique e tente novamente.', 'error');
                 return;
             }
-
-            const telefoneNumeros = telefone.replace(/\D/g, '');
-            if (telefoneNumeros.length < 10) {
+            if (!validarTelefone(telefone)) {
                 showMessage('Telefone inválido. Verifique e tente novamente.', 'error');
                 return;
             }
+
+
+
 
             // Preparar dados para envio
             const cpfLimpo = cpf.replace(/\D/g, '');
@@ -411,9 +423,7 @@
 
                     if (data && data.Login && data.Senha) {
                         // Mensagem personalizada para usuário já cadastrado
-                        if(data.Texto){
-                            data.Texto += " <br>Você receberá um email com as informações de login.";
-                        }
+
                         const info = `Login: ${data.Login} - Senha: ${data.Senha}`;
                         message.innerHTML = `
                             <div style="margin-bottom:12px;">${data.Texto || 'Você já possui cadastro no sistema.'}</div>
@@ -429,6 +439,8 @@
                             navigator.clipboard.writeText(info);
                             this.textContent = 'Copiado!';
                             setTimeout(() => { this.textContent = 'Copiar Informações de Login'; }, 1500);
+
+
                         };
                     } else {
                         showMessage(responseText || 'Cadastro realizado com sucesso!', 'success');
